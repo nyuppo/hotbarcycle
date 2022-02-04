@@ -4,5 +4,5 @@ Minecraft Fabric mod for Stardew Valley-inspired hotbar swapping. Developed for 
 # Features
 Adds a keybind (Default: H) that shifts the rows of the inventory downwards, allowing quick access to every row of the inventory without ever opening it.
 
-#Download
+# Download
 Coming soon!
