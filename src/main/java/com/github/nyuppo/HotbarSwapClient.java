@@ -15,6 +15,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class HotbarSwapClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
+    private static KeyBinding singleKeyBinding;
 
     @Override
     public void onInitializeClient() {
@@ -29,6 +30,20 @@ public class HotbarSwapClient implements ClientModInitializer {
                 this.shiftRows(client.player);
             }
         });
+
+        singleKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.hotbarswap.single_swap",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_J,
+                "category.hotbarswap.keybinds"
+        ));
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            while (singleKeyBinding.wasPressed()) {
+                if (client.player != null && client.player.getInventory() != null) {
+                    this.shiftSingle(client.player, client.player.getInventory().selectedSlot);
+                }
+            }
+        });
     }
 
     public void shiftRows(PlayerEntity player) {
@@ -38,20 +53,34 @@ public class HotbarSwapClient implements ClientModInitializer {
             return;
         }
 
-        for (int i = 0; i < 9; i++) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, 1 * 9 + i, i, SlotActionType.SWAP, player);
+        int i;
+        for (i = 0; i < 9; i++) {
+            interactionManager.clickSlot(player.playerScreenHandler.syncId, 9 + i, i, SlotActionType.SWAP, player);
         }
 
-        for (int i = 0; i < 9; i++) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, 2 * 9 + i, i, SlotActionType.SWAP, player);
+        for (i = 0; i < 9; i++) {
+            interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + i, i, SlotActionType.SWAP, player);
         }
 
-        for (int i = 0; i < 9; i++) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, 3 * 9 + i, i, SlotActionType.SWAP, player);
+        for (i = 0; i < 9; i++) {
+            interactionManager.clickSlot(player.playerScreenHandler.syncId, 27 + i, i, SlotActionType.SWAP, player);
         }
 
         player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
+    }
 
+    public void shiftSingle(PlayerEntity player, int hotbarSlot) {
+        @SuppressWarnings("resource")
+        ClientPlayerInteractionManager interactionManager = MinecraftClient.getInstance().interactionManager;
+        if (interactionManager == null) {
+            return;
+        }
+
+        interactionManager.clickSlot(player.playerScreenHandler.syncId, 9 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+        interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+        interactionManager.clickSlot(player.playerScreenHandler.syncId, 27 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+
+        player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.8f);
     }
 
 }
