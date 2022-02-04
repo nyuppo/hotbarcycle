@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "hotbarswap",
+  "version": "${version}",
+
+  "name": "Hotbar Swap",
+  "description": "Navigate your inventory with a Stardew Valley inspired hotbar swapping method.",
+  "authors": [
+    "nyuppo"
+  ],
+  "contact": {
+    "homepage": "https://github.com/nyuppo"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/hotbarswap/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.github.nyuppo.HotbarSwapClient"
+    ]
+  },
+  "mixins": [
+    "hotbarswap.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  }
+}
