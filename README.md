@@ -7,6 +7,6 @@ Adds 2 keybinds:
 - Swap Slot (Default: J): shifts a single column of the inventory downwards (whichever hotbar slot you have selected)
 
 # Download
-**Curseforge**: https://www.curseforge.com/minecraft/mc-mods/hotbarswap-fabric
+**Curseforge**: https://www.curseforge.com/minecraft/mc-mods/hotbarswap
 
 **Modrinth**: https://modrinth.com/mod/hotbarswap
