@@ -15,7 +15,7 @@
   "license": "CC0-1.0",
   "icon": "assets/hotbarswap/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "com.github.nyuppo.HotbarSwapClient"
