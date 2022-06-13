@@ -20,7 +20,7 @@ public class HotbarCycleClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.hotbarswap.cycle",
+                "key.hotbarcycle.cycle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
                 "category.hotbarcycle.keybinds"
@@ -32,7 +32,7 @@ public class HotbarCycleClient implements ClientModInitializer {
         });
 
         singleKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.hotbarswap.single_cycle",
+                "key.hotbarcycle.single_cycle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_J,
                 "category.hotbarcycle.keybinds"
