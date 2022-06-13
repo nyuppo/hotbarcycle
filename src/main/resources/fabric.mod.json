@@ -19,6 +19,9 @@
   "entrypoints": {
     "client": [
       "com.github.nyuppo.HotbarCycleClient"
+    ],
+    "modmenu": [
+      "com.github.nyuppo.config.ModMenuIntegration"
     ]
   },
   "mixins": [

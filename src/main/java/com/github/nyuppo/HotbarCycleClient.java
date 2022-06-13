@@ -1,5 +1,8 @@
 package com.github.nyuppo;
 
+import com.github.nyuppo.config.HotbarCycleConfig;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -16,6 +19,8 @@ import org.lwjgl.glfw.GLFW;
 public class HotbarCycleClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
     private static KeyBinding singleKeyBinding;
+
+    private static final HotbarCycleConfig CONFIG = AutoConfig.register(HotbarCycleConfig.class, GsonConfigSerializer::new).getConfig();
 
     @Override
     public void onInitializeClient() {
@@ -54,19 +59,27 @@ public class HotbarCycleClient implements ClientModInitializer {
         }
 
         int i;
-        for (i = 0; i < 9; i++) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, 9 + i, i, SlotActionType.SWAP, player);
+        if (CONFIG.reverseCycleDirection ? CONFIG.enableRow1 : CONFIG.enableRow3) {
+            for (i = 0; i < 9; i++) {
+                interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 9 : 27) + i, i, SlotActionType.SWAP, player);
+            }
         }
 
-        for (i = 0; i < 9; i++) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + i, i, SlotActionType.SWAP, player);
+        if (CONFIG.enableRow2) {
+            for (i = 0; i < 9; i++) {
+                interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + i, i, SlotActionType.SWAP, player);
+            }
         }
 
-        for (i = 0; i < 9; i++) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, 27 + i, i, SlotActionType.SWAP, player);
+        if (CONFIG.reverseCycleDirection ? CONFIG.enableRow3 : CONFIG.enableRow1) {
+            for (i = 0; i < 9; i++) {
+                interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 27 : 9) + i, i, SlotActionType.SWAP, player);
+            }
         }
 
-        player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
+        if (CONFIG.playSound) {
+            player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
+        }
     }
 
     public void shiftSingle(PlayerEntity player, int hotbarSlot) {
@@ -76,11 +89,21 @@ public class HotbarCycleClient implements ClientModInitializer {
             return;
         }
 
-        interactionManager.clickSlot(player.playerScreenHandler.syncId, 9 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
-        interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
-        interactionManager.clickSlot(player.playerScreenHandler.syncId, 27 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+        if (CONFIG.reverseCycleDirection ? CONFIG.enableRow1 : CONFIG.enableRow3) {
+            interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 9 : 27) + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+        }
 
-        player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.8f);
+        if (CONFIG.enableRow2) {
+            interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+        }
+
+        if (CONFIG.reverseCycleDirection ? CONFIG.enableRow3 : CONFIG.enableRow1) {
+            interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 27 : 9) + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+        }
+
+        if (CONFIG.playSound) {
+            player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.8f);
+        }
     }
 
 }

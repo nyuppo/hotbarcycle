@@ -1,5 +1,17 @@
 {
   "category.hotbarcycle.keybinds": "HotbarCycle",
   "key.hotbarcycle.cycle": "Cycle Hotbars",
-  "key.hotbarcycle.single_cycle": "Cycle Slot"
+  "key.hotbarcycle.single_cycle": "Cycle Slot",
+
+  "text.autoconfig.hotbarcycle.title": "HotbarCycle Config",
+
+  "text.autoconfig.hotbarcycle.category.default": "Usability",
+  "text.autoconfig.hotbarcycle.category.rows": "Enable Rows",
+
+  "text.autoconfig.hotbarcycle.option.playSound": "Play Cycle Sound",
+  "text.autoconfig.hotbarcycle.option.reverseCycleDirection": "Reverse Cycle Direction",
+
+  "text.autoconfig.hotbarcycle.option.enableRow1": "Enable Row 1 (Directly Above the Hotbar)",
+  "text.autoconfig.hotbarcycle.option.enableRow2": "Enable Row 2",
+  "text.autoconfig.hotbarcycle.option.enableRow3": "Enable Row 3 (Top Inventory Row)"
 }
