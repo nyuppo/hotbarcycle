@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
-  "id": "hotbarswap",
+  "id": "hotbarcycle",
   "version": "${version}",
 
-  "name": "Hotbar Swap",
-  "description": "Navigate your inventory with a Stardew Valley inspired hotbar swapping method.",
+  "name": "Hotbar Cycle",
+  "description": "Navigate your inventory with a Stardew Valley inspired hotbar cycling method.",
   "authors": [
     "nyuppo"
   ],
   "contact": {
-    "homepage": "https://github.com/nyuppo/hotbarswap"
+    "homepage": "https://github.com/nyuppo/hotbarcycle"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/hotbarswap/icon.png",
+  "icon": "assets/hotbarcycle/icon.png",
 
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.github.nyuppo.HotbarSwapClient"
+      "com.github.nyuppo.HotbarCycleClient"
     ]
   },
   "mixins": [
-    "hotbarswap.mixins.json"
+    "hotbarcycle.mixins.json"
   ],
 
   "depends": {

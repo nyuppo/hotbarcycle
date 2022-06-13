@@ -13,17 +13,17 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-public class HotbarSwapClient implements ClientModInitializer {
+public class HotbarCycleClient implements ClientModInitializer {
     private static KeyBinding keyBinding;
     private static KeyBinding singleKeyBinding;
 
     @Override
     public void onInitializeClient() {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.hotbarswap.swap",
+                "key.hotbarswap.cycle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
-                "category.hotbarswap.keybinds"
+                "category.hotbarcycle.keybinds"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
@@ -32,10 +32,10 @@ public class HotbarSwapClient implements ClientModInitializer {
         });
 
         singleKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.hotbarswap.single_swap",
+                "key.hotbarswap.single_cycle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_J,
-                "category.hotbarswap.keybinds"
+                "category.hotbarcycle.keybinds"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (singleKeyBinding.wasPressed()) {
