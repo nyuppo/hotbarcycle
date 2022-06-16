@@ -8,6 +8,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 public class HotbarCycleConfig implements ConfigData {
     public boolean playSound = true;
     public boolean reverseCycleDirection = false;
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean holdAndScroll = false;
 
     @ConfigEntry.Category("rows")
     public boolean enableRow1 = true;

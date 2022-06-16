@@ -10,6 +10,9 @@
 
   "text.autoconfig.hotbarcycle.option.playSound": "Play Cycle Sound",
   "text.autoconfig.hotbarcycle.option.reverseCycleDirection": "Reverse Cycle Direction",
+  "text.autoconfig.hotbarcycle.option.holdAndScroll": "Enable Hold and Scroll",
+  "text.autoconfig.hotbarcycle.option.holdAndScroll.@Tooltip[0]": "Hold your cycle keybind and scroll to cycle.",
+  "text.autoconfig.hotbarcycle.option.holdAndScroll.@Tooltip[1]": "(Replaces default functionality)",
 
   "text.autoconfig.hotbarcycle.option.enableRow1": "Enable Row 1 (Directly Above the Hotbar)",
   "text.autoconfig.hotbarcycle.option.enableRow2": "Enable Row 2",
