@@ -1,43 +1,21 @@
 package com.github.nyuppo.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+public abstract class HotbarCycleConfig {
+    public abstract boolean getPlaySound();
+    public abstract boolean getReverseCycleDirection();
+    public abstract boolean getHoldAndScroll();
 
-@Config(name = "hotbarcycle")
-public class HotbarCycleConfig implements ConfigData {
-    public boolean playSound = true;
-    public boolean reverseCycleDirection = false;
-    @ConfigEntry.Gui.Tooltip(count = 2)
-    public boolean holdAndScroll = false;
+    public abstract boolean getEnableRow1();
+    public abstract boolean getEnableRow2();
+    public abstract boolean getEnableRow3();
 
-    @ConfigEntry.Category("rows")
-    @ConfigEntry.Gui.Tooltip()
-    public boolean enableRow1 = true;
-    @ConfigEntry.Category("rows")
-    public boolean enableRow2 = true;
-    @ConfigEntry.Category("rows")
-    @ConfigEntry.Gui.Tooltip()
-    public boolean enableRow3 = true;
-
-    @ConfigEntry.Category("columns")
-    @ConfigEntry.Gui.Tooltip()
-    public boolean enableColumn0 = true;
-    @ConfigEntry.Category("columns")
-    public boolean enableColumn1 = true;
-    @ConfigEntry.Category("columns")
-    public boolean enableColumn2 = true;
-    @ConfigEntry.Category("columns")
-    public boolean enableColumn3 = true;
-    @ConfigEntry.Category("columns")
-    public boolean enableColumn4 = true;
-    @ConfigEntry.Category("columns")
-    public boolean enableColumn5 = true;
-    @ConfigEntry.Category("columns")
-    public boolean enableColumn6 = true;
-    @ConfigEntry.Category("columns")
-    public boolean enableColumn7 = true;
-    @ConfigEntry.Category("columns")
-    @ConfigEntry.Gui.Tooltip()
-    public boolean enableColumn8 = true;
+    public abstract boolean getEnableColumn0();
+    public abstract boolean getEnableColumn1();
+    public abstract boolean getEnableColumn2();
+    public abstract boolean getEnableColumn3();
+    public abstract boolean getEnableColumn4();
+    public abstract boolean getEnableColumn5();
+    public abstract boolean getEnableColumn6();
+    public abstract boolean getEnableColumn7();
+    public abstract boolean getEnableColumn8();
 }

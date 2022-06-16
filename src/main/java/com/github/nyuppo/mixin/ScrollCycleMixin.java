@@ -14,10 +14,10 @@ public class ScrollCycleMixin {
     private void hotbarcycleScrollInHotbar(double scrollAmount, CallbackInfo ci) {
         int i = (int)Math.signum(scrollAmount);
 
-        if (HotbarCycleClient.getConfig().holdAndScroll && HotbarCycleClient.getCycleKeyBinding().isPressed()) {
+        if (HotbarCycleClient.getConfig().getHoldAndScroll() && HotbarCycleClient.getCycleKeyBinding().isPressed()) {
             HotbarCycleClient.shiftRows(MinecraftClient.getInstance(), i < 0);
             ci.cancel();
-        } else if (HotbarCycleClient.getConfig().holdAndScroll && HotbarCycleClient.getSingleCycleKeyBinding().isPressed()) {
+        } else if (HotbarCycleClient.getConfig().getHoldAndScroll() && HotbarCycleClient.getSingleCycleKeyBinding().isPressed()) {
             HotbarCycleClient.shiftSingle(MinecraftClient.getInstance(), ((PlayerInventory)(Object)this).selectedSlot, i < 0);
             ci.cancel();
         }

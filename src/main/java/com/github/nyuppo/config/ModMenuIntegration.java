@@ -10,6 +10,6 @@ import net.fabricmc.api.Environment;
 public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> AutoConfig.getConfigScreen(HotbarCycleConfig.class, parent).get();
+        return parent -> AutoConfig.getConfigScreen(ClothConfigHotbarCycleConfig.class, parent).get();
     }
 }
