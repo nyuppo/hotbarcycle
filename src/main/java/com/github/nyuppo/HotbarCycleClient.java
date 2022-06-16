@@ -85,19 +85,25 @@ public class HotbarCycleClient implements ClientModInitializer {
         int i;
         if (CONFIG.reverseCycleDirection ? CONFIG.enableRow1 : CONFIG.enableRow3) {
             for (i = 0; i < 9; i++) {
-                clicker.swap(client, (!CONFIG.reverseCycleDirection ? 9 : 27) + i, i);
+                if (isColumnEnabled(i)) {
+                    clicker.swap(client, (!CONFIG.reverseCycleDirection ? 9 : 27) + i, i);
+                }
             }
         }
 
         if (CONFIG.enableRow2) {
             for (i = 0; i < 9; i++) {
-                clicker.swap(client, 18 + i, i);
+                if (isColumnEnabled(i)) {
+                    clicker.swap(client, 18 + i, i);
+                }
             }
         }
 
         if (CONFIG.reverseCycleDirection ? CONFIG.enableRow3 : CONFIG.enableRow1) {
             for (i = 0; i < 9; i++) {
-                clicker.swap(client, (!CONFIG.reverseCycleDirection ? 27 : 9) + i, i);
+                if (isColumnEnabled(i)) {
+                    clicker.swap(client, (!CONFIG.reverseCycleDirection ? 27 : 9) + i, i);
+                }
             }
         }
 
@@ -116,19 +122,25 @@ public class HotbarCycleClient implements ClientModInitializer {
         int i;
         if (reverseBypass ? CONFIG.enableRow1 : CONFIG.enableRow3) {
             for (i = 0; i < 9; i++) {
-                clicker.swap(client, (!reverseBypass ? 9 : 27) + i, i);
+                if (isColumnEnabled(i)) {
+                    clicker.swap(client, (!reverseBypass ? 9 : 27) + i, i);
+                }
             }
         }
 
         if (CONFIG.enableRow2) {
             for (i = 0; i < 9; i++) {
-                clicker.swap(client, 18 + i, i);
+                if (isColumnEnabled(i)) {
+                    clicker.swap(client, 18 + i, i);
+                }
             }
         }
 
         if (reverseBypass ? CONFIG.enableRow3 : CONFIG.enableRow1) {
             for (i = 0; i < 9; i++) {
-                clicker.swap(client, (!reverseBypass ? 27 : 9) + i, i);
+                if (isColumnEnabled(i)) {
+                    clicker.swap(client, (!reverseBypass ? 27 : 9) + i, i);
+                }
             }
         }
 
@@ -192,5 +204,20 @@ public class HotbarCycleClient implements ClientModInitializer {
         }
 
         return new VanillaClicker();
+    }
+
+    private static boolean isColumnEnabled(int columnIndex) {
+        return switch (columnIndex) {
+            case 0 -> CONFIG.enableColumn0;
+            case 1 -> CONFIG.enableColumn1;
+            case 2 -> CONFIG.enableColumn2;
+            case 3 -> CONFIG.enableColumn3;
+            case 4 -> CONFIG.enableColumn4;
+            case 5 -> CONFIG.enableColumn5;
+            case 6 -> CONFIG.enableColumn6;
+            case 7 -> CONFIG.enableColumn7;
+            case 8 -> CONFIG.enableColumn8;
+            default -> false;
+        };
     }
 }

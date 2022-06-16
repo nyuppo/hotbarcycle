@@ -7,6 +7,7 @@
 
   "text.autoconfig.hotbarcycle.category.default": "Usability",
   "text.autoconfig.hotbarcycle.category.rows": "Enable Rows",
+  "text.autoconfig.hotbarcycle.category.columns": "Enable Columns",
 
   "text.autoconfig.hotbarcycle.option.playSound": "Play Cycle Sound",
   "text.autoconfig.hotbarcycle.option.reverseCycleDirection": "Reverse Cycle Direction",
@@ -14,7 +15,21 @@
   "text.autoconfig.hotbarcycle.option.holdAndScroll.@Tooltip[0]": "Hold your cycle keybind and scroll to cycle.",
   "text.autoconfig.hotbarcycle.option.holdAndScroll.@Tooltip[1]": "(Replaces default functionality)",
 
-  "text.autoconfig.hotbarcycle.option.enableRow1": "Enable Row 1 (Directly Above the Hotbar)",
+  "text.autoconfig.hotbarcycle.option.enableRow1": "Enable Row 1",
+  "text.autoconfig.hotbarcycle.option.enableRow1.@Tooltip": "(Directly Above the Hotbar)",
   "text.autoconfig.hotbarcycle.option.enableRow2": "Enable Row 2",
-  "text.autoconfig.hotbarcycle.option.enableRow3": "Enable Row 3 (Top Inventory Row)"
+  "text.autoconfig.hotbarcycle.option.enableRow3": "Enable Row 3",
+  "text.autoconfig.hotbarcycle.option.enableRow3.@Tooltip": "(Top-most Inventory Row)",
+
+  "text.autoconfig.hotbarcycle.option.enableColumn0": "Enable Column 1",
+  "text.autoconfig.hotbarcycle.option.enableColumn0.@Tooltip": "(Left-most)",
+  "text.autoconfig.hotbarcycle.option.enableColumn1": "Enable Column 2",
+  "text.autoconfig.hotbarcycle.option.enableColumn2": "Enable Column 3",
+  "text.autoconfig.hotbarcycle.option.enableColumn3": "Enable Column 4",
+  "text.autoconfig.hotbarcycle.option.enableColumn4": "Enable Column 5",
+  "text.autoconfig.hotbarcycle.option.enableColumn5": "Enable Column 6",
+  "text.autoconfig.hotbarcycle.option.enableColumn6": "Enable Column 7",
+  "text.autoconfig.hotbarcycle.option.enableColumn7": "Enable Column 8",
+  "text.autoconfig.hotbarcycle.option.enableColumn8": "Enable Column 9",
+  "text.autoconfig.hotbarcycle.option.enableColumn8.@Tooltip": "(Right-most)"
 }
