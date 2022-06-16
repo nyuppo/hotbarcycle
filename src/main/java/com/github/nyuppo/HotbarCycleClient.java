@@ -1,109 +1,196 @@
 package com.github.nyuppo;
 
+import com.github.nyuppo.compat.Clicker;
+import com.github.nyuppo.compat.IPNClicker;
+import com.github.nyuppo.compat.VanillaClicker;
 import com.github.nyuppo.config.HotbarCycleConfig;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HotbarCycleClient implements ClientModInitializer {
-    private static KeyBinding keyBinding;
-    private static KeyBinding singleKeyBinding;
+    private static KeyBinding cycleKeyBinding;
+    private static KeyBinding singleCycleKeyBinding;
 
     private static final HotbarCycleConfig CONFIG = AutoConfig.register(HotbarCycleConfig.class, GsonConfigSerializer::new).getConfig();
 
+    private static Clicker clicker;
+
+    public static final Logger LOGGER = LoggerFactory.getLogger("hotbarcycle");
+
+    public static HotbarCycleConfig getConfig() {
+        return CONFIG;
+    }
+
+    public static KeyBinding getCycleKeyBinding() {
+        return cycleKeyBinding;
+    }
+
+    public static KeyBinding getSingleCycleKeyBinding() {
+        return singleCycleKeyBinding;
+    }
+
     @Override
     public void onInitializeClient() {
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        clicker = getClicker();
+
+        cycleKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.hotbarcycle.cycle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_H,
                 "category.hotbarcycle.keybinds"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (keyBinding.wasPressed()) {
-                this.shiftRows(client.player);
+            while (cycleKeyBinding.wasPressed()) {
+                if (client.player != null && !CONFIG.holdAndScroll) {
+                    shiftRows(client);
+                }
             }
         });
 
-        singleKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        singleCycleKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.hotbarcycle.single_cycle",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_J,
                 "category.hotbarcycle.keybinds"
         ));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (singleKeyBinding.wasPressed()) {
-                if (client.player != null && client.player.getInventory() != null) {
-                    this.shiftSingle(client.player, client.player.getInventory().selectedSlot);
+            while (singleCycleKeyBinding.wasPressed()) {
+                if (client.player != null && client.player.getInventory() != null && !CONFIG.holdAndScroll) {
+                    shiftSingle(client, client.player.getInventory().selectedSlot);
                 }
             }
         });
     }
 
-    public void shiftRows(PlayerEntity player) {
+    public static void shiftRows(MinecraftClient client) {
         @SuppressWarnings("resource")
-        ClientPlayerInteractionManager interactionManager = MinecraftClient.getInstance().interactionManager;
-        if (interactionManager == null) {
+        ClientPlayerInteractionManager interactionManager = client.interactionManager;
+        if (interactionManager == null || client.player == null) {
             return;
         }
 
         int i;
         if (CONFIG.reverseCycleDirection ? CONFIG.enableRow1 : CONFIG.enableRow3) {
             for (i = 0; i < 9; i++) {
-                interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 9 : 27) + i, i, SlotActionType.SWAP, player);
+                clicker.swap(client, (!CONFIG.reverseCycleDirection ? 9 : 27) + i, i);
             }
         }
 
         if (CONFIG.enableRow2) {
             for (i = 0; i < 9; i++) {
-                interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + i, i, SlotActionType.SWAP, player);
+                clicker.swap(client, 18 + i, i);
             }
         }
 
         if (CONFIG.reverseCycleDirection ? CONFIG.enableRow3 : CONFIG.enableRow1) {
             for (i = 0; i < 9; i++) {
-                interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 27 : 9) + i, i, SlotActionType.SWAP, player);
+                clicker.swap(client, (!CONFIG.reverseCycleDirection ? 27 : 9) + i, i);
             }
         }
 
         if (CONFIG.playSound) {
-            player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
+            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
         }
     }
 
-    public void shiftSingle(PlayerEntity player, int hotbarSlot) {
+    public static void shiftRows(MinecraftClient client, boolean reverseBypass) {
         @SuppressWarnings("resource")
-        ClientPlayerInteractionManager interactionManager = MinecraftClient.getInstance().interactionManager;
-        if (interactionManager == null) {
+        ClientPlayerInteractionManager interactionManager = client.interactionManager;
+        if (interactionManager == null || client.player == null) {
+            return;
+        }
+
+        int i;
+        if (reverseBypass ? CONFIG.enableRow1 : CONFIG.enableRow3) {
+            for (i = 0; i < 9; i++) {
+                clicker.swap(client, (!reverseBypass ? 9 : 27) + i, i);
+            }
+        }
+
+        if (CONFIG.enableRow2) {
+            for (i = 0; i < 9; i++) {
+                clicker.swap(client, 18 + i, i);
+            }
+        }
+
+        if (reverseBypass ? CONFIG.enableRow3 : CONFIG.enableRow1) {
+            for (i = 0; i < 9; i++) {
+                clicker.swap(client, (!reverseBypass ? 27 : 9) + i, i);
+            }
+        }
+
+        if (CONFIG.playSound) {
+            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
+        }
+    }
+
+    public static void shiftSingle(MinecraftClient client, int hotbarSlot) {
+        @SuppressWarnings("resource")
+        ClientPlayerInteractionManager interactionManager = client.interactionManager;
+        if (interactionManager == null || client.player == null) {
             return;
         }
 
         if (CONFIG.reverseCycleDirection ? CONFIG.enableRow1 : CONFIG.enableRow3) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 9 : 27) + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+            clicker.swap(client, (!CONFIG.reverseCycleDirection ? 9 : 27) + hotbarSlot, hotbarSlot);
         }
 
         if (CONFIG.enableRow2) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, 18 + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+            clicker.swap(client, 18 + hotbarSlot, hotbarSlot);
         }
 
         if (CONFIG.reverseCycleDirection ? CONFIG.enableRow3 : CONFIG.enableRow1) {
-            interactionManager.clickSlot(player.playerScreenHandler.syncId, (!CONFIG.reverseCycleDirection ? 27 : 9) + hotbarSlot, hotbarSlot, SlotActionType.SWAP, player);
+            clicker.swap(client, (!CONFIG.reverseCycleDirection ? 27 : 9) + hotbarSlot, hotbarSlot);
         }
 
         if (CONFIG.playSound) {
-            player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.8f);
+            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.8f);
         }
     }
 
+    public static void shiftSingle(MinecraftClient client, int hotbarSlot, boolean reverseBypass) {
+        @SuppressWarnings("resource")
+        ClientPlayerInteractionManager interactionManager = client.interactionManager;
+        if (interactionManager == null || client.player == null) {
+            return;
+        }
+
+        if (reverseBypass ? CONFIG.enableRow1 : CONFIG.enableRow3) {
+            clicker.swap(client, (!reverseBypass ? 9 : 27) + hotbarSlot, hotbarSlot);
+        }
+
+        if (CONFIG.enableRow2) {
+            clicker.swap(client, 18 + hotbarSlot, hotbarSlot);
+        }
+
+        if (reverseBypass ? CONFIG.enableRow3 : CONFIG.enableRow1) {
+            clicker.swap(client, (!reverseBypass ? 27 : 9) + hotbarSlot, hotbarSlot);
+        }
+
+        if (CONFIG.playSound) {
+            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.8f);
+        }
+    }
+
+    private static Clicker getClicker() {
+        if (FabricLoader.getInstance().isModLoaded("inventoryprofilesnext")) {
+            LOGGER.info("Inventory Profiles Next was found, switching to compatible clicker!");
+            return new IPNClicker();
+        }
+
+        return new VanillaClicker();
+    }
 }
