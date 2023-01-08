@@ -57,7 +57,7 @@ public class HotbarCycleClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (cycleKeyBinding.wasPressed()) {
                 if (client.player != null && !CONFIG.getHoldAndScroll()) {
-                    shiftRows(client);
+                    shiftRows(client, Direction.DOWN);
                 }
             }
         });
@@ -71,13 +71,28 @@ public class HotbarCycleClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (singleCycleKeyBinding.wasPressed()) {
                 if (client.player != null && client.player.getInventory() != null && !CONFIG.getHoldAndScroll()) {
-                    shiftSingle(client, client.player.getInventory().selectedSlot);
+                    shiftSingle(client, client.player.getInventory().selectedSlot, Direction.DOWN);
                 }
             }
         });
     }
 
-    public static void shiftRows(MinecraftClient client) {
+    public enum Direction {
+        UP,
+        DOWN;
+
+        public Direction reverse(final boolean reversed) {
+            return switch (this) {
+                case UP -> !reversed ? UP : DOWN;
+                case DOWN -> !reversed ? DOWN : UP;
+            };
+        }
+    }
+
+    public static void shiftRows(MinecraftClient client, final Direction requestedDirection) {
+        // invert direction if reverse cycle is enabled
+        final Direction direction = requestedDirection.reverse(CONFIG.getReverseCycleDirection());
+
         @SuppressWarnings("resource")
         ClientPlayerInteractionManager interactionManager = client.interactionManager;
         if (interactionManager == null || client.player == null) {
@@ -85,10 +100,10 @@ public class HotbarCycleClient implements ClientModInitializer {
         }
 
         int i;
-        if (CONFIG.getReverseCycleDirection() ? CONFIG.getEnableRow1() : CONFIG.getEnableRow3()) {
+        if (direction != Direction.DOWN ? CONFIG.getEnableRow1() : CONFIG.getEnableRow3()) {
             for (i = 0; i < 9; i++) {
                 if (isColumnEnabled(i)) {
-                    clicker.swap(client, (!CONFIG.getReverseCycleDirection() ? 9 : 27) + i, i);
+                    clicker.swap(client, (direction == Direction.DOWN ? 9 : 27) + i, i);
                 }
             }
         }
@@ -101,10 +116,10 @@ public class HotbarCycleClient implements ClientModInitializer {
             }
         }
 
-        if (CONFIG.getReverseCycleDirection() ? CONFIG.getEnableRow3() : CONFIG.getEnableRow1()) {
+        if (direction != Direction.DOWN ? CONFIG.getEnableRow3() : CONFIG.getEnableRow1()) {
             for (i = 0; i < 9; i++) {
                 if (isColumnEnabled(i)) {
-                    clicker.swap(client, (!CONFIG.getReverseCycleDirection() ? 27 : 9) + i, i);
+                    clicker.swap(client, (direction == Direction.DOWN ? 27 : 9) + i, i);
                 }
             }
         }
@@ -114,84 +129,26 @@ public class HotbarCycleClient implements ClientModInitializer {
         }
     }
 
-    public static void shiftRows(MinecraftClient client, boolean reverseBypass) {
+    public static void shiftSingle(MinecraftClient client, int hotbarSlot, final Direction requestedDirection) {
+        // invert direction if reverse cycle is enabled
+        final Direction direction = requestedDirection.reverse(CONFIG.getReverseCycleDirection());
+
         @SuppressWarnings("resource")
         ClientPlayerInteractionManager interactionManager = client.interactionManager;
         if (interactionManager == null || client.player == null) {
             return;
         }
 
-        int i;
-        if (reverseBypass ? CONFIG.getEnableRow1() : CONFIG.getEnableRow3()) {
-            for (i = 0; i < 9; i++) {
-                if (isColumnEnabled(i)) {
-                    clicker.swap(client, (!reverseBypass ? 9 : 27) + i, i);
-                }
-            }
-        }
-
-        if (CONFIG.getEnableRow2()) {
-            for (i = 0; i < 9; i++) {
-                if (isColumnEnabled(i)) {
-                    clicker.swap(client, 18 + i, i);
-                }
-            }
-        }
-
-        if (reverseBypass ? CONFIG.getEnableRow3() : CONFIG.getEnableRow1()) {
-            for (i = 0; i < 9; i++) {
-                if (isColumnEnabled(i)) {
-                    clicker.swap(client, (!reverseBypass ? 27 : 9) + i, i);
-                }
-            }
-        }
-
-        if (CONFIG.getPlaySound()) {
-            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
-        }
-    }
-
-    public static void shiftSingle(MinecraftClient client, int hotbarSlot) {
-        @SuppressWarnings("resource")
-        ClientPlayerInteractionManager interactionManager = client.interactionManager;
-        if (interactionManager == null || client.player == null) {
-            return;
-        }
-
-        if (CONFIG.getReverseCycleDirection() ? CONFIG.getEnableRow1() : CONFIG.getEnableRow3()) {
-            clicker.swap(client, (!CONFIG.getReverseCycleDirection() ? 9 : 27) + hotbarSlot, hotbarSlot);
+        if (direction == Direction.DOWN ? CONFIG.getEnableRow1() : CONFIG.getEnableRow3()) {
+            clicker.swap(client, (direction != Direction.DOWN ? 9 : 27) + hotbarSlot, hotbarSlot);
         }
 
         if (CONFIG.getEnableRow2()) {
             clicker.swap(client, 18 + hotbarSlot, hotbarSlot);
         }
 
-        if (CONFIG.getReverseCycleDirection() ? CONFIG.getEnableRow3() : CONFIG.getEnableRow1()) {
-            clicker.swap(client, (!CONFIG.getReverseCycleDirection() ? 27 : 9) + hotbarSlot, hotbarSlot);
-        }
-
-        if (CONFIG.getPlaySound()) {
-            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.8f);
-        }
-    }
-
-    public static void shiftSingle(MinecraftClient client, int hotbarSlot, boolean reverseBypass) {
-        @SuppressWarnings("resource")
-        ClientPlayerInteractionManager interactionManager = client.interactionManager;
-        if (interactionManager == null || client.player == null) {
-            return;
-        }
-
-        if (reverseBypass ? CONFIG.getEnableRow1() : CONFIG.getEnableRow3()) {
-            clicker.swap(client, (!reverseBypass ? 9 : 27) + hotbarSlot, hotbarSlot);
-        }
-
-        if (CONFIG.getEnableRow2()) {
-            clicker.swap(client, 18 + hotbarSlot, hotbarSlot);
-        }
-
-        if (reverseBypass ? CONFIG.getEnableRow3() : CONFIG.getEnableRow1()) {
-            clicker.swap(client, (!reverseBypass ? 27 : 9) + hotbarSlot, hotbarSlot);
+        if (direction == Direction.DOWN ? CONFIG.getEnableRow3() : CONFIG.getEnableRow1()) {
+            clicker.swap(client, (direction != Direction.DOWN ? 27 : 9) + hotbarSlot, hotbarSlot);
         }
 
         if (CONFIG.getPlaySound()) {

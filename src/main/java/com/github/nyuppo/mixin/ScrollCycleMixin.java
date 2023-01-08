@@ -12,13 +12,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ScrollCycleMixin {
     @Inject(method = "scrollInHotbar(D)V", at = @At("HEAD"), cancellable = true)
     private void hotbarcycleScrollInHotbar(double scrollAmount, CallbackInfo ci) {
-        int i = (int)Math.signum(scrollAmount);
-
+        final HotbarCycleClient.Direction direction = Math.signum(scrollAmount) < 0
+                ? HotbarCycleClient.Direction.DOWN
+                : HotbarCycleClient.Direction.UP;
         if (HotbarCycleClient.getConfig().getHoldAndScroll() && HotbarCycleClient.getCycleKeyBinding().isPressed()) {
-            HotbarCycleClient.shiftRows(MinecraftClient.getInstance(), i < 0);
+            HotbarCycleClient.shiftRows(MinecraftClient.getInstance(), direction);
             ci.cancel();
         } else if (HotbarCycleClient.getConfig().getHoldAndScroll() && HotbarCycleClient.getSingleCycleKeyBinding().isPressed()) {
-            HotbarCycleClient.shiftSingle(MinecraftClient.getInstance(), ((PlayerInventory)(Object)this).selectedSlot, i < 0);
+            HotbarCycleClient.shiftSingle(MinecraftClient.getInstance(), ((PlayerInventory)(Object)this).selectedSlot, direction);
             ci.cancel();
         }
     }
