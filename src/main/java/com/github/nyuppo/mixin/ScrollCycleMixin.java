@@ -13,8 +13,8 @@ public class ScrollCycleMixin {
     @Inject(method = "scrollInHotbar(D)V", at = @At("HEAD"), cancellable = true)
     private void hotbarcycleScrollInHotbar(double scrollAmount, CallbackInfo ci) {
         final HotbarCycleClient.Direction direction = Math.signum(scrollAmount) < 0
-                ? HotbarCycleClient.Direction.DOWN
-                : HotbarCycleClient.Direction.UP;
+                ? HotbarCycleClient.Direction.UP
+                : HotbarCycleClient.Direction.DOWN;
         if (HotbarCycleClient.getConfig().getHoldAndScroll() && HotbarCycleClient.getCycleKeyBinding().isPressed()) {
             HotbarCycleClient.shiftRows(MinecraftClient.getInstance(), direction);
             ci.cancel();
