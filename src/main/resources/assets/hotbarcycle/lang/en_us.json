@@ -14,6 +14,8 @@
   "text.autoconfig.hotbarcycle.option.holdAndScroll": "Enable Hold and Scroll",
   "text.autoconfig.hotbarcycle.option.holdAndScroll.@Tooltip[0]": "Hold your cycle keybind and scroll to cycle.",
   "text.autoconfig.hotbarcycle.option.holdAndScroll.@Tooltip[1]": "(Replaces default functionality)",
+  "text.autoconfig.hotbarcycle.option.repeatSlotToCycle": "Enable Repeat Slot to Cycle",
+  "text.autoconfig.hotbarcycle.option.repeatSlotToCycle.@Tooltip": "Click the selected slot to cycle it.",
 
   "text.autoconfig.hotbarcycle.option.enableRow1": "Enable Row 1",
   "text.autoconfig.hotbarcycle.option.enableRow1.@Tooltip": "(Directly Above the Hotbar)",

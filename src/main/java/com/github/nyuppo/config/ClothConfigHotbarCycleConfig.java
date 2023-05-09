@@ -10,6 +10,8 @@ public class ClothConfigHotbarCycleConfig extends HotbarCycleConfig implements C
     public boolean reverseCycleDirection = false;
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean holdAndScroll = false;
+    @ConfigEntry.Gui.Tooltip()
+    public boolean repeatSlotToCycle = false;
 
     @ConfigEntry.Category("rows")
     @ConfigEntry.Gui.Tooltip()
@@ -54,6 +56,11 @@ public class ClothConfigHotbarCycleConfig extends HotbarCycleConfig implements C
     @Override
     public boolean getHoldAndScroll() {
         return holdAndScroll;
+    }
+
+    @Override
+    public boolean getRepeatSlotToCycle() {
+        return repeatSlotToCycle;
     }
 
     @Override

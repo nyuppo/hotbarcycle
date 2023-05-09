@@ -17,6 +17,11 @@ public class DefaultHotbarCycleConfig extends HotbarCycleConfig {
     }
 
     @Override
+    public boolean getRepeatSlotToCycle() {
+        return false;
+    }
+
+    @Override
     public boolean getEnableRow1() {
         return true;
     }
