@@ -2,11 +2,13 @@ package com.github.nyuppo.mixin;
 
 import com.github.nyuppo.HotbarCycleClient;
 import com.github.nyuppo.HotbarCycleClient.Direction;
+import com.github.nyuppo.config.HotbarCycleConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import java.util.function.BiConsumer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,16 +39,25 @@ public class RepeatClickCycleMixin {
 
     @Redirect(method="doItemPick", at=@At(value="INVOKE", target="net/minecraft/entity/player/PlayerInventory.getSlotWithStack (Lnet/minecraft/item/ItemStack;)I"))
     private int cyclePickedItem(PlayerInventory inventory, ItemStack pickedItem) {
+        final HotbarCycleConfig config = HotbarCycleClient.getConfig();
         int slot = inventory.getSlotWithStack(pickedItem);
-        if (slot < 0)
-            return slot;
-
         int x = slot % 9;
         int y = slot / 9;
 
-        for (int i=y; 0<i; --i)
-            HotbarCycleClient.shiftRows((MinecraftClient)(Object)this, Direction.DOWN);
+        if (0<=slot && config.getCycleWhenPickingBlock() && config.isColumnEnabled(x) && config.isRowEnabled(y))
+        {
+            BiConsumer<MinecraftClient,Direction> shiftOp;
+            if (config.getPickCyclesWholeHotbar())
+                shiftOp = (c,d)->HotbarCycleClient.shiftRows(c,d);
+            else
+                shiftOp = (c,d)->HotbarCycleClient.shiftSingle(c,x,d);
 
-        return x;
+            for (int i=y; 0<i; --i)
+                shiftOp.accept((MinecraftClient)(Object)this, Direction.DOWN);;
+
+            slot = x;
+        }
+
+        return slot;
     }
 }
