@@ -42,18 +42,18 @@ public class RepeatClickCycleMixin {
         int slot = inventory.getSlotWithStack(pickedItem);
         int x, y;
 
-        if (0<slot && config.getCycleWhenPickingBlock() && config.isColumnEnabled(x=slot%9) && config.isRowEnabled(y=slot/9))
+        if (8<slot && config.getCycleWhenPickingBlock() && HotbarCycleClient.isColumnEnabled(x=slot%9) && HotbarCycleClient.isRowEnabled(y=slot/9))
         {
             final MinecraftClient client = (MinecraftClient)(Object)this;
-            final Direction direction = Direction.UP.reverse(config.getReverseCycleDirection());
-            Runnable shiftOp;
-            if (config.getPickCyclesWholeHotbar())
-                shiftOp = ()->HotbarCycleClient.shiftRows(client, direction);
-            else
-                shiftOp = ()->HotbarCycleClient.shiftSingle(client, x, direction);
+            int direction = -1;
+            for (int i=1; i<y; ++i)
+                if (HotbarCycleClient.isRowEnabled(i))
+                    direction--;
 
-            for (int i=y; 0<i; --i)
-                shiftOp.run();
+            if (config.getPickCyclesWholeHotbar())
+                HotbarCycleClient.shiftRows(client, direction);
+            else
+                HotbarCycleClient.shiftSingle(client, x, direction);
 
             slot = x;
         }

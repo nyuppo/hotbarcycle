@@ -21,27 +21,4 @@ public abstract class HotbarCycleConfig {
     public abstract boolean getEnableColumn6();
     public abstract boolean getEnableColumn7();
     public abstract boolean getEnableColumn8();
-
-    public boolean isRowEnabled(int y){
-        switch (y){
-            default: return false;
-            case 1: return getEnableRow1();
-            case 2: return getEnableRow2();
-            case 3: return getEnableRow3();
-        }
-    }
-
-    public boolean isColumnEnabled(int x){
-        switch (x){
-            default: return false;
-            case 1: return getEnableColumn1();
-            case 2: return getEnableColumn2();
-            case 3: return getEnableColumn3();
-            case 4: return getEnableColumn4();
-            case 5: return getEnableColumn5();
-            case 6: return getEnableColumn6();
-            case 7: return getEnableColumn7();
-            case 8: return getEnableColumn8();
-        }
-    }
 }
