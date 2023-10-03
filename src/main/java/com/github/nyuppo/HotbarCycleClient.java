@@ -184,8 +184,8 @@ public class HotbarCycleClient implements ClientModInitializer {
         }
 
         int[] swapMap = SwapMap.GetRowSwapMap(direction);
-        for (int i=0; i<4 && swapMap[x]!=x; ++i){
-            int to = swapMap[x];
+        for (int i=0; i<4 && swapMap[0]!=0; ++i){
+            int to = swapMap[0];
 
             clicker.swap(client, (to * 9) + x, x);
             swapMap[0] = swapMap[to];
