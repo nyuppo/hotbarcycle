@@ -8,7 +8,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import java.util.function.BiConsumer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,19 +40,20 @@ public class RepeatClickCycleMixin {
     private int cyclePickedItem(PlayerInventory inventory, ItemStack pickedItem) {
         final HotbarCycleConfig config = HotbarCycleClient.getConfig();
         int slot = inventory.getSlotWithStack(pickedItem);
-        int x = slot % 9;
-        int y = slot / 9;
+        int x, y;
 
-        if (0<=slot && config.getCycleWhenPickingBlock() && config.isColumnEnabled(x) && config.isRowEnabled(y))
+        if (0<slot && config.getCycleWhenPickingBlock() && config.isColumnEnabled(x=slot%9) && config.isRowEnabled(y=slot/9))
         {
-            BiConsumer<MinecraftClient,Direction> shiftOp;
+            final MinecraftClient client = (MinecraftClient)(Object)this;
+            final Direction direction = Direction.UP.reverse(config.getReverseCycleDirection());
+            Runnable shiftOp;
             if (config.getPickCyclesWholeHotbar())
-                shiftOp = (c,d)->HotbarCycleClient.shiftRows(c,d);
+                shiftOp = ()->HotbarCycleClient.shiftRows(client, direction);
             else
-                shiftOp = (c,d)->HotbarCycleClient.shiftSingle(c,x,d);
+                shiftOp = ()->HotbarCycleClient.shiftSingle(client, x, direction);
 
             for (int i=y; 0<i; --i)
-                shiftOp.accept((MinecraftClient)(Object)this, Direction.DOWN);;
+                shiftOp.run();
 
             slot = x;
         }
