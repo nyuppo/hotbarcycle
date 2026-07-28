@@ -1,26 +1,28 @@
 package com.github.nyuppo.mixin;
 
 import com.github.nyuppo.HotbarCycleClient;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.client.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PlayerInventory.class)
+@Mixin(Mouse.class)
 public class ScrollCycleMixin {
-    @Inject(method = "scrollInHotbar(D)V", at = @At("HEAD"), cancellable = true)
-    private void hotbarcycleScrollInHotbar(double scrollAmount, CallbackInfo ci) {
+    @WrapOperation(method="onMouseScroll", at=@At(value="INVOKE", target="net/minecraft/client/input/Scroller.scrollCycling(DII)I" ))
+    private int hotbarcycleScrollInHotbar(double scrollAmount, int selectedSlot, int hotbarSize, Operation<Integer> original) {
         final HotbarCycleClient.Direction direction = Math.signum(scrollAmount) < 0
                 ? HotbarCycleClient.Direction.UP
                 : HotbarCycleClient.Direction.DOWN;
         if (HotbarCycleClient.getConfig().getHoldAndScroll() && HotbarCycleClient.getCycleKeyBinding().isPressed()) {
             HotbarCycleClient.shiftRows(MinecraftClient.getInstance(), direction);
-            ci.cancel();
+            return selectedSlot;
         } else if (HotbarCycleClient.getConfig().getHoldAndScroll() && HotbarCycleClient.getSingleCycleKeyBinding().isPressed()) {
-            HotbarCycleClient.shiftSingle(MinecraftClient.getInstance(), ((PlayerInventory)(Object)this).selectedSlot, direction);
-            ci.cancel();
+            HotbarCycleClient.shiftSingle(MinecraftClient.getInstance(), selectedSlot, direction);
+            return selectedSlot;
         }
+        else
+            return original.call(scrollAmount, selectedSlot, hotbarSize);
     }
 }
