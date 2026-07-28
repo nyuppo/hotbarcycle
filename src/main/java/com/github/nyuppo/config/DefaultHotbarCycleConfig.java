@@ -22,6 +22,17 @@ public class DefaultHotbarCycleConfig extends HotbarCycleConfig {
     }
 
     @Override
+    public boolean getCycleWhenPickingBlock(){
+        return false;
+    }
+
+    @Override
+    public boolean getPickCyclesWholeHotbar(){
+        return false;
+    }
+
+
+    @Override
     public boolean getEnableRow1() {
         return true;
     }

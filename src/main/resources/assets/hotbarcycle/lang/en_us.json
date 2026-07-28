@@ -16,6 +16,10 @@
   "text.autoconfig.hotbarcycle.option.holdAndScroll.@Tooltip[1]": "(Replaces default functionality)",
   "text.autoconfig.hotbarcycle.option.repeatSlotToCycle": "Enable Repeat Slot to Cycle",
   "text.autoconfig.hotbarcycle.option.repeatSlotToCycle.@Tooltip": "Click the selected slot again to cycle it.",
+  "text.autoconfig.hotbarcycle.option.cycleWhenPickingBlock": "Cycle when picking blocks",
+  "text.autoconfig.hotbarcycle.option.cycleWhenPickingBlock.@Tooltip": "Targeted block will be cycled into your hotbar before selecting it.",
+  "text.autoconfig.hotbarcycle.option.pickCyclesWholeHotbar": "Picking cycles whole hotbar",
+  "text.autoconfig.hotbarcycle.option.pickCyclesWholeHotbar.@Tooltip": "Whether picking a block should cycle the whole hotbar, or only the approriate slot.",
 
   "text.autoconfig.hotbarcycle.option.enableRow1": "Enable Row 1",
   "text.autoconfig.hotbarcycle.option.enableRow1.@Tooltip": "(Directly Above the Hotbar)",

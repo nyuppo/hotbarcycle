@@ -5,6 +5,8 @@ public abstract class HotbarCycleConfig {
     public abstract boolean getReverseCycleDirection();
     public abstract boolean getHoldAndScroll();
     public abstract boolean getRepeatSlotToCycle();
+    public abstract boolean getCycleWhenPickingBlock();
+    public abstract boolean getPickCyclesWholeHotbar();
 
     public abstract boolean getEnableRow1();
     public abstract boolean getEnableRow2();

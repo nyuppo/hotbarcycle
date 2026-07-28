@@ -156,6 +156,47 @@ public class HotbarCycleClient implements ClientModInitializer {
         }
     }
 
+    public static void shiftRows(MinecraftClient client, int direction) {
+        if (client.interactionManager == null || client.player == null) {
+            return;
+        }
+
+        int[] swapMap = SwapMap.GetInventorySwapMap(direction);
+        for (int x=0; x<9; ++x) {
+            for (int i=0; i<4 && swapMap[x]!=x; ++i){
+                int from = x;
+                int to = swapMap[x];
+
+                clicker.swap(client, to, from);
+                swapMap[from] = swapMap[to];
+                swapMap[to] = to;
+            }
+        }
+
+        if (CONFIG.getPlaySound()) {
+            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
+        }
+    }
+
+    public static void shiftSingle(MinecraftClient client, int x, int direction) {
+        if (client.interactionManager == null || client.player == null) {
+            return;
+        }
+
+        int[] swapMap = SwapMap.GetRowSwapMap(direction);
+        for (int i=0; i<4 && swapMap[0]!=0; ++i){
+            int to = swapMap[0];
+
+            clicker.swap(client, (to * 9) + x, x);
+            swapMap[0] = swapMap[to];
+            swapMap[to] = to;
+        }
+
+        if (CONFIG.getPlaySound()) {
+            client.player.playSound(SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.MASTER, 0.5f, 1.5f);
+        }
+    }
+
     private static Clicker getClicker() {
         if (FabricLoader.getInstance().isModLoaded("inventoryprofilesnext")) {
             LOGGER.info("Inventory Profiles Next was found, switching to compatible clicker!");
@@ -165,7 +206,7 @@ public class HotbarCycleClient implements ClientModInitializer {
         return new VanillaClicker();
     }
 
-    private static boolean isColumnEnabled(int columnIndex) {
+    public static boolean isColumnEnabled(int columnIndex) {
         return switch (columnIndex) {
             case 0 -> CONFIG.getEnableColumn0();
             case 1 -> CONFIG.getEnableColumn1();
@@ -176,6 +217,18 @@ public class HotbarCycleClient implements ClientModInitializer {
             case 6 -> CONFIG.getEnableColumn6();
             case 7 -> CONFIG.getEnableColumn7();
             case 8 -> CONFIG.getEnableColumn8();
+            default -> false;
+        };
+    }
+
+    public static boolean isRowEnabled(int y) {
+        return switch (y){
+            // The mix-up is intentional; Row 1 (bottom) in the config is the 
+            // last row (y=3) in the slot array.
+            case 1 -> CONFIG.getEnableRow3();
+            case 2 -> CONFIG.getEnableRow2();
+            case 3 -> CONFIG.getEnableRow1();
+            case 0 -> true;
             default -> false;
         };
     }
