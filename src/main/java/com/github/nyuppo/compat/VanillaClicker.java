@@ -1,19 +1,16 @@
 package com.github.nyuppo.compat;
 
-import com.github.nyuppo.HotbarCycleClient;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.screen.slot.SlotActionType;
-
-import java.util.Map;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.world.inventory.ContainerInput;
 
 public class VanillaClicker implements Clicker {
     @Override
-    public void swap(MinecraftClient client, int from, int to) {
-        ClientPlayerInteractionManager interactionManager = client.interactionManager;
+    public void swap(Minecraft client, int from, int to) {
+        MultiPlayerGameMode interactionManager = client.gameMode;
 
         if (interactionManager != null && client.player != null && client.player.getInventory() != null) {
-            interactionManager.clickSlot(client.player.playerScreenHandler.syncId, from, to, SlotActionType.SWAP, client.player);
+            interactionManager.handleContainerInput(client.player.inventoryMenu.containerId, from, to, ContainerInput.SWAP, client.player);
         }
     }
 }
